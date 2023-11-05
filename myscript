@@ -1,0 +1,10 @@
+#!/bin/bash
+
+logfile="log.txt"
+total_refs=0
+
+top_hosts=$(awk '$11!="\"-\"" {print $1}' "$logfile" | sort | uniq -c | sort -nr | head -n 10) 
+
+total_refs=$(echo "$top_hosts"| awk '{ s+= $1} END {print s}')
+
+echo "$top_hosts" | awk -v total="$total_refs" '{printf "%d. %s - %d - %.0f%%\n", NR, $2, $1, ($1 / total) * 100}'
